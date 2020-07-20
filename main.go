@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/streadway/amqp"
 )
 
@@ -146,7 +147,7 @@ func main() {
 		var peer Servicerespone
 		var info Registerinfo
 		var ccinfo Serviceinfo
-		db, err := sql.Open("mysql", "belove:oc886191@tcp(140.118.109.132:3306/crosschain")
+		db, err := sql.Open("mysql", "belove:oc886191@tcp(140.118.109.132:3306/crosschain)")
 		defer db.Close()
 		failOnError(err, "Failed to connect database")
 
