@@ -189,7 +189,7 @@ func main() {
 			err = json.Unmarshal(dmsg.Body, &ccinfo)
 			failOnError(err, "Failed to decode body to json")
 
-			rows, err := db.Query("Select peerid from peers where peerchain = ?", ccinfo.TargetChain)
+			rows, err := db.Query("Select id from peers where peerchain = ?", ccinfo.TargetChain)
 			defer rows.Close()
 			failOnError(err, "Failed to query the database")
 			for rows.Next() {
@@ -199,12 +199,12 @@ func main() {
 			}
 
 			rand.Seed(time.Now().UnixNano())
-			err = db.QueryRow("Select peeradd, peerenode from peers where peerid = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
+			err = db.QueryRow("Select peeradd, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
 			peer.Peer4 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
 
 			id = nil
 
-			rows, err = db.Query("Select peerid from peers where not peerchain = ? and not peerchain = ?", ccinfo.TargetChain, ccinfo.SourceChain)
+			rows, err = db.Query("Select id from peers where not peerchain = ? and not peerchain = ?", ccinfo.TargetChain, ccinfo.SourceChain)
 			defer rows.Close()
 			failOnError(err, "")
 			for rows.Next() {
@@ -212,11 +212,11 @@ func main() {
 				failOnError(err, "")
 				id = append(id, tempid)
 			}
-			err = db.QueryRow("Select peeradd, peerenode from peers where peerid = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
+			err = db.QueryRow("Select peeradd, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
 			failOnError(err, "")
 			peer.Peer2 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
 			for {
-				err := db.QueryRow("Select peeradd, peerenode from peers where peerid = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
+				err := db.QueryRow("Select peeradd, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
 				failOnError(err, "")
 				if Contain(ip, tempip) != true {
 					peer.Peer3 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
