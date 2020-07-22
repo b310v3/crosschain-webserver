@@ -194,13 +194,13 @@ func main() {
 			defer rows.Close()
 			failOnError(err, "Failed to query the database")
 			for rows.Next() {
+				fmt.Println("row?")
 				err := rows.Scan(&tempid)
 				failOnError(err, "Failed to read row")
 				fmt.Println(tempid)
 				id = append(id, tempid)
 			}
 
-			fmt.Println("here??")
 			rand.Seed(time.Now().UnixNano())
 			err = db.QueryRow("Select peeradd, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
 			peer.Peer4 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
