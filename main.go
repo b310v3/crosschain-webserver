@@ -200,6 +200,7 @@ func main() {
 				id = append(id, tempid)
 			}
 
+			fmt.Println("here??")
 			rand.Seed(time.Now().UnixNano())
 			err = db.QueryRow("Select peeradd, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
 			peer.Peer4 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
