@@ -153,6 +153,7 @@ func main() {
 
 		// Handler for the refister service, may need to insert unique value later
 		for rmsg := range rmsgs {
+			log.Println("receive register message?")
 			err = json.Unmarshal(rmsg.Body, &info)
 			failOnError(err, "Failed to decode body to json")
 
@@ -181,6 +182,7 @@ func main() {
 
 		// Handler for the discovery service
 		for dmsg := range dmsgs {
+			log.Println("receive discovery message?")
 			err = json.Unmarshal(dmsg.Body, &ccinfo)
 			failOnError(err, "Failed to decode body to json")
 
