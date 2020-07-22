@@ -189,7 +189,7 @@ func main() {
 			log.Println("receive discovery message?")
 			err = json.Unmarshal(dmsg.Body, &ccinfo)
 			failOnError(err, "Failed to decode body to json")
-
+			fmt.Println(ccinfo.TargetChain)
 			rows, err := db.Query("Select id from peers where peerchain = ?", ccinfo.TargetChain)
 			defer rows.Close()
 			failOnError(err, "Failed to query the database")
