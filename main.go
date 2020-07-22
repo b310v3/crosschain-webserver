@@ -53,7 +53,20 @@ func Contain(s []string, e string) bool {
 
 func main() {
 	// Register handler
-	// Service handler
+	// Service handlervar
+	var ip []string
+	var id []int
+	var tempip string
+	var tempid int
+	var tempadd string
+	var tempenode string
+	var peer Servicerespone
+	var info Registerinfo
+	var ccinfo Serviceinfo
+	db, err := sql.Open("mysql", "belove:oc886191@tcp(140.118.109.132:3306)/crosschain")
+	defer db.Close()
+	failOnError(err, "Failed to connect database")
+
 	conn, err := amqp.Dial("amqp://belove:oc886191@140.118.109.132:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -138,19 +151,6 @@ func main() {
 
 	// do what the hell
 	go func() {
-		var ip []string
-		var id []int
-		var tempip string
-		var tempid int
-		var tempadd string
-		var tempenode string
-		var peer Servicerespone
-		var info Registerinfo
-		var ccinfo Serviceinfo
-		db, err := sql.Open("mysql", "belove:oc886191@tcp(140.118.109.132:3306)/crosschain")
-		defer db.Close()
-		failOnError(err, "Failed to connect database")
-
 		// Handler for the refister service, may need to insert unique value later
 		for rmsg := range rmsgs {
 			log.Println("receive register message?")
@@ -179,7 +179,9 @@ func main() {
 				})
 			failOnError(err, "Failed to respone")
 		}
-		log.Println("pass here?")
+	}()
+
+	go func() {
 		// Handler for the discovery service
 		for dmsg := range dmsgs {
 			log.Println("receive discovery message?")
