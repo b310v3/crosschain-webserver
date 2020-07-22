@@ -169,13 +169,14 @@ func main() {
 			log.Printf("Received a message: %v", lastID)
 			// send respone back
 			err = ch.Publish(
-				"getupandwork",
-				info.Peeraddress,
+				"",
+				rmsg.ReplyTo,
 				false,
 				false,
 				amqp.Publishing{
-					ContentType: "text/plain",
-					Body:        []byte("200" + strconv.Itoa(int(lastID))),
+					ContentType:   "text/plain",
+					CorrelationId: rmsg.CorrelationId,
+					Body:          []byte("200" + strconv.Itoa(int(lastID))),
 				})
 			failOnError(err, "Failed to respone")
 		}
@@ -227,19 +228,17 @@ func main() {
 			failOnError(err, "Failed to convert to json")
 
 			// send back winner peer list to requester via mqtt
-			for i := 0; i < 4; i++ {
-				err = ch.Publish(
-					"getupandwork", // exchange
-					dmsg.ReplyTo,   // routing key
-					false,          // mandatory
-					false,          // immediate
-					amqp.Publishing{
-						ContentType:   "application/json",
-						CorrelationId: dmsg.CorrelationId,
-						Body:          []byte(peerlist),
-					})
-				failOnError(err, "Failed to publish mqtt to peers")
-			}
+			err = ch.Publish(
+				"",           // exchange
+				dmsg.ReplyTo, // routing key
+				false,        // mandatory
+				false,        // immediate
+				amqp.Publishing{
+					ContentType:   "application/json",
+					CorrelationId: dmsg.CorrelationId,
+					Body:          []byte(peerlist),
+				})
+			failOnError(err, "Failed to publish mqtt to peers")
 		}
 	}()
 
