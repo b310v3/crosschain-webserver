@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"strconv"
@@ -195,7 +196,7 @@ func main() {
 			for rows.Next() {
 				err := rows.Scan(&tempid)
 				failOnError(err, "Failed to read row")
-				log.Println(tempid)
+				fmt.Println(tempid)
 				id = append(id, tempid)
 			}
 
