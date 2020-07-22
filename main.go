@@ -195,15 +195,13 @@ func main() {
 			defer rows.Close()
 			failOnError(err, "Failed to query the database")
 			for rows.Next() {
-				fmt.Println("row?")
 				err := rows.Scan(&tempid)
 				failOnError(err, "Failed to read row")
-				fmt.Println(tempid)
 				id = append(id, tempid)
 			}
 
 			rand.Seed(time.Now().UnixNano())
-			err = db.QueryRow("Select peeradd, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
+			err = db.QueryRow("Select peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
 			peer.Peer4 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
 
 			id = nil
@@ -216,11 +214,11 @@ func main() {
 				failOnError(err, "")
 				id = append(id, tempid)
 			}
-			err = db.QueryRow("Select peeradd, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
+			err = db.QueryRow("Select peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
 			failOnError(err, "")
 			peer.Peer2 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
 			for {
-				err := db.QueryRow("Select peeradd, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
+				err := db.QueryRow("Select peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
 				failOnError(err, "")
 				if Contain(ip, tempip) != true {
 					peer.Peer3 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
