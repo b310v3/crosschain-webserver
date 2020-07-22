@@ -220,7 +220,7 @@ func main() {
 			for {
 				err := db.QueryRow("Select peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
 				failOnError(err, "")
-				if Contain(ip, tempip) != true {
+				if Contain(ip, tempip) == false {
 					peer.Peer3 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
 					break
 				}
