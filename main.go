@@ -150,7 +150,6 @@ func main() {
 		db, err := sql.Open("mysql", "belove:oc886191@tcp(140.118.109.132:3306)/crosschain")
 		defer db.Close()
 		failOnError(err, "Failed to connect database")
-		log.Println("here!!")
 
 		// Handler for the refister service, may need to insert unique value later
 		for rmsg := range rmsgs {
@@ -180,7 +179,7 @@ func main() {
 				})
 			failOnError(err, "Failed to respone")
 		}
-
+		log.Println("pass here?")
 		// Handler for the discovery service
 		for dmsg := range dmsgs {
 			log.Println("receive discovery message?")
