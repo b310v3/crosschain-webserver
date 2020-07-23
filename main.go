@@ -61,6 +61,7 @@ func main() {
 	var tempid int
 	var tempadd string
 	var tempenode string
+	var tempchain string
 	var peer Servicerespone
 	var info Registerinfo
 	var ccinfo Serviceinfo
@@ -201,8 +202,8 @@ func main() {
 			}
 
 			rand.Seed(time.Now().UnixNano())
-			err = db.QueryRow("Select peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
-			peer.Peer4 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
+			err = db.QueryRow("Select peerchain, peerip, peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempchain, &tempip, &tempadd, &tempenode)
+			peer.Peer4 = Registerinfo{Peerchain: tempchain, Peerip: tempip, Peeraddress: tempadd, Peerenode: tempenode}
 
 			id = nil
 
@@ -214,14 +215,14 @@ func main() {
 				failOnError(err, "")
 				id = append(id, tempid)
 			}
-			err = db.QueryRow("Select peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
+			err = db.QueryRow("Select peerchain, peerip, peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempchain, &tempip, &tempadd, &tempenode)
 			failOnError(err, "")
-			peer.Peer2 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
+			peer.Peer2 = Registerinfo{Peerchain: tempchain, Peerip: tempip, Peeraddress: tempadd, Peerenode: tempenode}
 			for {
-				err := db.QueryRow("Select peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempadd, &tempenode)
+				err = db.QueryRow("Select peerchain, peerip, peeraddress, peerenode from peers where id = ?", id[rand.Intn(len(id))]).Scan(&tempchain, &tempip, &tempadd, &tempenode)
 				failOnError(err, "")
 				if Contain(ip, tempip) == false {
-					peer.Peer3 = Registerinfo{Peeraddress: tempadd, Peerenode: tempenode}
+					peer.Peer3 = Registerinfo{Peerchain: tempchain, Peerip: tempip, Peeraddress: tempadd, Peerenode: tempenode}
 					break
 				}
 			}
